@@ -4,4 +4,9 @@
 
 A high-score list will come here!
 
+{% for mentor in m %}
+    <div>
+        <p>Navn: {{mentor.name}}</p>
+    </div>
+{% endfor %}
 {% endblock %}

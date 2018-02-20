@@ -18,6 +18,6 @@ from django.contrib import admin
 from pages import views
 
 urlpatterns = [
-    url(r'^pages', include('pages.urls' )),
+    url(r'^pages/', include('pages.urls' )),
     url(r'^admin/', admin.site.urls),
 ]
