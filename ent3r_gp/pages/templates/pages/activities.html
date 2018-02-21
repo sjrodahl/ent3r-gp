@@ -2,6 +2,14 @@
 
 {% block content %}
 
-Some activities will come here!
-
+<table>
+    <tr>
+        <td>Navn</td><td>Poeng</td>
+    </tr>
+{% for a in act %}
+    <tr>
+        <td>{{a.name}}</td><td>{{a.points}}</td>
+    </tr>
+{% endfor %}
+</table
 {% endblock %}

@@ -3,7 +3,18 @@
 {% block content %}
 
 A high-score list will come here!
+<p>{{request.user.username}}'s score: {{s}}
+{% for ach in a %}
+    <div>
+        <p>Navn: {{ach.user.username}} fullførte {{ach.activity.name}} </p>
+    </div>
+{% endfor %}
 
+{% for user in u %}
+    <div>
+        <p>Navn: {{user.username}}</p>
+    </div>
+{% endfor %}
 {% for mentor in m %}
     <div>
         <p>Navn: {{mentor.name}}</p>
