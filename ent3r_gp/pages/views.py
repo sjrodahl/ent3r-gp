@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from .forms import NewActivityForm
+from django.db.models import Sum
+from .forms import NewActivityForm, DoneActivityForm
 from .models import Mentor, Activity, Achievement
-
+from django.contrib.auth import views as auth_views
 
 def index(request):
     return HttpResponse("Hello ENT3R")
@@ -12,21 +13,21 @@ def index(request):
 
 @login_required
 def hiscore(request):
-    mentors = Mentor.objects.all()
-    users = User.objects.all()
-    achievements = Achievement.objects.all()
-    my_achs  = Achievement.objects.filter(user_id=request.user.id)
-    my_score = 0
-    for a in my_achs:
-        my_score += a.activity.points
-
-    print(request.user.get_username()+"'s score: " + str( my_score))
-    return render(request, 'pages/highscore.html', {'m': mentors, 'u': users, 'a': achievements, 's':my_score})
+    hiscorelist = Achievement.objects.values('user__username').annotate(score=Sum('activity__points'))
+    return render(request, 'pages/highscore.html', {'qs': hiscorelist})
 
 @login_required
 def activities(request):
     act = Activity.objects.all()
-    return render(request, 'pages/activities.html', {'act': act})
+    if request.method == "POST":
+        form = DoneActivityForm(request.POST)
+        if form.is_valid():
+            return redirect('pages_hiscore')
+        else:
+            return redirect('pages_activities')
+    else:
+        form = DoneActivityForm()
+        return render(request, 'pages/activities.html', {'act': act, 'f': form})
 
 @login_required
 def activity_new(request):
@@ -39,3 +40,16 @@ def activity_new(request):
         form = NewActivityForm()
         return render(request, 'pages/activity_new.html', {'form': form})
 
+@login_required
+def my_achievements(request):
+    my_achievements = Achievement.objects.filter(user_id = request.user.id)
+    print(request.user.id)
+    for i in my_achievements:
+        print(i.user.username)
+    return render(request, 'pages/my_achievements.html', {'my_ach': my_achievements})
+
+def login(request, **kwargs):
+    if (request.user.is_authenticated):
+        return redirect('pages_hiscore')
+    else:
+        return auth_views.login(request, **kwargs)

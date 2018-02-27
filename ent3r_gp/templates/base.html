@@ -6,8 +6,12 @@
     <body>
 
         <nav>
-            <a href="#">Aktiviteter</a>
-            <a href="#">Highscore</a>
+            <a href=" {% url  'pages_activities' %}">Aktiviteter</a>
+            <a href="{% url  'pages_hiscore' %}">Highscore</a>
+            <a href="{% url 'login' %}">Logg inn</a>
+            <a href="{% url 'logout' %}">Logg ut</a>
+            <a href="{% url 'password_change' %}">Endre Passord</a>
+            
         </nav>
 
         {% block content %}
@@ -17,7 +21,6 @@
         <hr>
 
         {% block footer %}
-        Footer
         {% endblock %}
 
     </body>
