@@ -21,6 +21,9 @@
         <hr>
 
         {% block footer %}
+            {% if user.is_authenticated%}
+            <div>Logget inn som: {{request.user.get_username}}</div>
+            {% endif %}
         {% endblock %}
 
     </body>
