@@ -6,18 +6,19 @@
     <tr>
         <td></td><td>Navn</td><td>Poeng</td>
     </tr>
-{% for a in act %}
-    <tr>
-        <td><input type="checkbox" name ="choices"></td><td>{{a.name}}</td><td>{{a.points}}</td>
-    </tr>
-{% endfor %}
-</table
-<p> </p>
-
+    
 <form action="" method ="POST" class = "post-form">
     {% csrf_token %}
-    {{ f.as_p }}
-    <input type="submit" value="Registrer aktiviteter"/> 
+ 
+{% for a in act %}
+    <tr>
+        <td><input type="checkbox" value = {{a.id}} name ="choices"></td><td>{{a.name}}</td><td>{{a.points}}</td>
+    </tr>
+{% endfor %}
+</table>
+<p> </p>
+
+   <input type="submit" value="Registrer aktiviteter"/> 
 </form>
         
 {% endblock %}
