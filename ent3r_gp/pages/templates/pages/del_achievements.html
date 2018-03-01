@@ -1,0 +1,23 @@
+{% extends "base.html"%}
+
+{% block content %}
+
+<table>
+    <tr>
+        <td>Navn</td><td>Poeng</td><td>Tid registrert</td>
+    </tr>
+    <form action="" method ="POST" class = "post-form">
+    {% csrf_token %}
+ 
+{% for a in my_ach %}
+    <tr>
+        <td><input type="checkbox" name="delete" value = {{a.id}} /></td><td>{{a.activity.name}}</td><td>{{a.activity.points}}</td><td>{{a.date_added}}</td><td>
+    </tr>
+{% endfor %}
+  </table>
+    <input type="submit" value="Slett aktiviteter"/> 
+</form>
+ 
+    
+{% endblock %}
+

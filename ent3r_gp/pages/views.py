@@ -13,8 +13,9 @@ def index(request):
 
 @login_required
 def hiscore(request):
-    hiscorelist = Achievement.objects.values('user__username').annotate(score=Sum('activity__points'))
-    return render(request, 'pages/highscore.html', {'qs': hiscorelist})
+    hiscorelist = Achievement.objects.values('user__username').annotate(score=Sum('activity__points')).order_by('-score')
+    my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
+    return render(request, 'pages/highscore.html', {'qs': hiscorelist, 'ms': my_score})
 
 @login_required
 def activities(request):
@@ -48,3 +49,16 @@ def my_achievements(request):
         print(i.user.username)
     return render(request, 'pages/my_achievements.html', {'my_ach': my_achievements})
 
+@login_required
+def delete_achievements(request):
+    my_achievements = Achievement.objects.filter(user_id = request.user.id)
+    if request.method == "POST":
+        checked = request.POST.getlist('delete')
+        for ach_id in checked:
+            ach_to_delete = Achievement.objects.get(id=ach_id)
+            ach_to_delete.delete()
+        print(checked)
+
+        return redirect('pages_hiscore')
+    else:
+        return render(request, 'pages/del_achievements.html', {'my_ach': my_achievements})

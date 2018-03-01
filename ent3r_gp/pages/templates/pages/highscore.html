@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-Highscore
+<div>Din score: {{ms.score}}</div>
+<h2>Highscore-liste:</h2>
 <table>
 {% for dict in qs %}
 <tr>
