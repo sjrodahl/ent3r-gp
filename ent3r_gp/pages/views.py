@@ -8,8 +8,10 @@ from .models import Mentor, Activity, Achievement
 from django.contrib.auth import views as auth_views
 
 def index(request):
-    return HttpResponse("Hello ENT3R")
-     #return render("Hello")
+    if request.user.is_authenticated:
+        return redirect('pages_hiscore')
+    else:
+        return redirect('login')
 
 @login_required
 def hiscore(request):
