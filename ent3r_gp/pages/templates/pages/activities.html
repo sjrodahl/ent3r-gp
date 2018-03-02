@@ -1,24 +1,30 @@
 {% extends "base.html" %}
 
+{% load bootstrap3 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% bootstrap_messages %}
+
 {% block content %}
-
-<table>
-    <tr>
-        <td></td><td>Navn</td><td>Poeng</td>
-    </tr>
-    
-<form action="" method ="POST" class = "post-form">
-    {% csrf_token %}
- 
-{% for a in act %}
-    <tr>
-        <td><input type="checkbox" value = {{a.id}} name ="choices"></td><td>{{a.name}}</td><td>{{a.points}}</td>
-    </tr>
-{% endfor %}
-</table>
-<p> </p>
-
-   <input type="submit" value="Registrer aktiviteter"/> 
-</form>
+<div class="container">
+    <form action="" method ="POST" class = "post-form">
+        {% csrf_token %}
+        <div class ="row">
+            <div class="col-md-8">Aktivitet</div>
+            <div class="col-md-2">Poeng</div>
+        </div>
+        {% for a in act %}
+        <div class ="row">
+            <div class="form-check"><input class="form-check-input" type="checkbox" value = {{a.id}} name ="choices"></div>
+            <div class="col-md-8">{{a.name|lower|capfirst}}</div>
+            <div class="col-md-2">{{a.points}}</div>
+        </div>
+        {% endfor %}
+        <div class="container">
+            <button type="submit" class="btn btn-success">Registrer aktiviteter</button> 
+        </div>
+    </form>
         
 {% endblock %}

@@ -1,9 +1,25 @@
 {% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% bootstrap_messages %}
+
 
 {% block content %}
-     <h1>New activity</h1>
-    <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p}}
-        <input type="submit" value="Legg til" />
+<div class="container">
+
+    <h1>New activity</h1>
+
+    <form action="" method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form layout='inline' %}
+        {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "star" %} Legg til
+        </button>
+        {% endbuttons %}
     </form>
+</div>
 {% endblock %}
