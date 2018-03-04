@@ -2,16 +2,32 @@
 
 {% block content %}
 
-<table>
-    <tr>
-        <td>Navn</td><td>Poeng</td><td>Tid registrert</td>
-    </tr>
-{% for a in my_ach %}
-    <tr>
-        <td>{{a.activity.name}}</td><td>{{a.activity.points}}</td><td>{{a.date_added}}</td><td><input type="button" value="Slett" class = "del_ach_button"</td>
-    </tr>
-{% endfor %}
-</table
-       
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            Navn
+        </div> <div class="col">
+            Poeng
+        </div>
+        <div class="col">
+            Tid registrert
+        </div>
+    </div> 
+    {% for a in my_ach %}
+    <div class="row">
+        <div class="col">
+            {{a.activity.name |lower|capfirst}}
+        </div>
+        <div class="col">
+            {{a.activity.points}}
+        </div>
+        <div class="col">
+            {{ a.date_added  }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}
 
