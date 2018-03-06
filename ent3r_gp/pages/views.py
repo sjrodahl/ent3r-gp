@@ -7,6 +7,8 @@ from .forms import NewActivityForm
 from .models import Mentor, Activity, Achievement
 from django.contrib.auth import views as auth_views
 
+HIGHSCORE_LIMIT = 15
+
 def index(request):
     if request.user.is_authenticated:
         return redirect('pages_hiscore')
@@ -15,7 +17,7 @@ def index(request):
 
 @login_required
 def hiscore(request):
-    hiscorelist = Achievement.objects.values('user__username').annotate(score=Sum('activity__points')).order_by('-score')
+    hiscorelist = Achievement.objects.values('user__username').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
     my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
     return render(request, 'pages/highscore.html', {'qs': hiscorelist, 'ms': my_score})
 
@@ -24,10 +26,9 @@ def activities(request):
     act = Activity.objects.all()
     if request.method == "POST":
         checked = request.POST.getlist('choices')
-        for ach in checked:
-            completed__activity = Activity.objects.get(id=ach)
-            new_achievement = Achievement.objects.create(activity=completed__activity, user = request.user)
-            new_achievement.save()
+        activity = Activity.objects.get(id=ach)
+        new_achievement = Achievement.objects.create(activity=completed__activity, user = request.user)
+        new_achievement.save()
         return redirect('pages_hiscore')
     else:
         return render(request, 'pages/activities.html', {'act': act })
