@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class Activity(models.Model):
     name = models.CharField(max_length=500)
     points = models.IntegerField()
+    tag = models.CharField(max_length=50)
     completed_by = models.ManyToManyField(User, through='Achievement')
     def __str__(self):
         return str(self.name) +": " + str(self.points)
