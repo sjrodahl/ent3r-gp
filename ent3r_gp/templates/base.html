@@ -6,9 +6,12 @@
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> 
         <!--- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> 
         <!--- Own CSS -->
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
         {% block css %}
         {% endblock %}
     </head>
@@ -16,7 +19,7 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="{% url 'pages_hiscore' %}">
-                <img src ="{% static  "/img/ent3r-logo.png"%}" width="50" height="30" alt="">
+                <img src ="{% static  "/img/ent3r-logo.png"%}" width="60" height="30" alt="">
                 Grand Prix
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
