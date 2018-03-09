@@ -1,0 +1,24 @@
+.tag {
+    font-style: italic;
+}
+.points{
+    font-weight: 700;
+}
+#pt1 {
+    border-style: solid;
+    border-width: thin;
+    border-color: white;
+    background-color: #EDB797;
+}
+#pt2 {
+    border-style: solid;
+    border-width: thin;
+    border-color: white;
+    background-color: #EDA67D;
+}
+#pt3 {
+    border-style: solid;
+    border-width: thin;
+    border-color: white;
+    background-color: #EF915B;
+}

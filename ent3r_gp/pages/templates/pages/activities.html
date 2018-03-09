@@ -1,26 +1,21 @@
 {% extends "base.html" %}
 
-{% load bootstrap3 %}
-
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-
-{% bootstrap_messages %}
-
+{% block css %}{% load static%} <link rel="stylesheet" href="{% static 'pages/css/style.css' %}">{% endblock %}
 {% block content %}
 <div class="container">
     <form action="" method ="POST" class = "post-form">
         {% csrf_token %}
         <div class ="row">
-            <div class="col-md-8">Aktivitet</div>
-            <div class="col-md-2">Poeng</div>
+            <div class="col-md-1">Poeng</div>
+            <div class="col-md-3"></div>
+            <div class="col-md-7">Beskrivelse</div>
         </div>
         {% for a in act %}
-        <div class ="row">
+        <div id= "pt{{a.points}}" class ="row">
             <div class="form-check"><input class="form-check-input" type="checkbox" value = {{a.id}} name ="choices"></div>
-            <div class="col-md-1">{{a.points}}</div>
-            <div class="col-md-2">#{{a.tag}}</div>
-            <div class="col-md-7">{{a.name|lower|capfirst}}</div>
+            <div class="points col-md-1">{{a.points}}</div>
+            <div class="tag col-md-3" >#{{a.tag}}</div>
+            <div class="desc col-md-7">{{a.name|lower|capfirst}}</div>
         </div>
         {% endfor %}
         <div class="container">
