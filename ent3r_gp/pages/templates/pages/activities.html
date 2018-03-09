@@ -18,8 +18,9 @@
         {% for a in act %}
         <div class ="row">
             <div class="form-check"><input class="form-check-input" type="checkbox" value = {{a.id}} name ="choices"></div>
-            <div class="col-md-8">{{a.name|lower|capfirst}}</div>
-            <div class="col-md-2">{{a.points}}</div>
+            <div class="col-md-1">{{a.points}}</div>
+            <div class="col-md-2">#{{a.tag}}</div>
+            <div class="col-md-7">{{a.name|lower|capfirst}}</div>
         </div>
         {% endfor %}
         <div class="container">
