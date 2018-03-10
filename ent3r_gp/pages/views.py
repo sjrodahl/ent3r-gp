@@ -17,7 +17,7 @@ def index(request):
 
 @login_required
 def hiscore(request):
-    hiscorelist = Achievement.objects.values('user__username').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
+    hiscorelist = Achievement.objects.values('user__username', 'user__first_name', 'user__last_name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
     my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
     return render(request, 'pages/highscore.html', {'qs': hiscorelist, 'ms': my_score})
 
@@ -26,9 +26,10 @@ def activities(request):
     act = Activity.objects.all()
     if request.method == "POST":
         checked = request.POST.getlist('choices')
-        activity = Activity.objects.get(id=ach)
-        new_achievement = Achievement.objects.create(activity=completed__activity, user = request.user)
-        new_achievement.save()
+        for ach in checked:
+            completed_activity = Activity.objects.get(id=ach)
+            new_achievement = Achievement.objects.create(activity=completed_activity, user = request.user)
+            new_achievement.save()
         return redirect('pages_hiscore')
     else:
         return render(request, 'pages/activities.html', {'act': act })
