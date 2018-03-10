@@ -22,3 +22,30 @@
     border-color: white;
     background-color: #EF915B;
 }
+.hi1 {
+    font-size: x-large;    
+    background-color: #E2BB1D;
+}
+.hi2 {
+    font-size: large;
+    background-color: #D8D1B6;
+}
+.hi3{
+    font-size: large;
+    background-color: #EF915B;
+}
+h3{
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+.my_score{
+    font-weight: 600;
+    text-align: right;
+}
+.header-row{
+    font-weight: 700;
+    padding = 2rem 1.5rem;
+}
+.body-row{
+    text-align: center;
+}

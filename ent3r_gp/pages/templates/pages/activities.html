@@ -3,9 +3,10 @@
 {% block css %}{% load static%} <link rel="stylesheet" href="{% static 'pages/css/style.css' %}">{% endblock %}
 {% block content %}
 <div class="container">
+    <h3>Registrer aktiviteter</h3>
     <form action="" method ="POST" class = "post-form">
         {% csrf_token %}
-        <div class ="row">
+        <div class ="header-row row">
             <div class="col-md-1">Poeng</div>
             <div class="col-md-3"></div>
             <div class="col-md-7">Beskrivelse</div>

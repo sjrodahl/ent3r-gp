@@ -1,11 +1,14 @@
 {% extends "base.html"%}
 
+{% block css %}{% load static%} <link rel="stylesheet" href="{% static 'pages/css/style.css' %}">{% endblock %}
+
 {% block content %}
 
 <div class="container">
+    <h3>Slett prestasjoner</h3>
     <form action="" method ="POST" class = "post-form">
         {% csrf_token %}
-        <div class ="row">
+        <div class ="header-row row">
             <div class="col-md-6">Navn</div>
             <div class="col-md-2">Tid registrert</div>
             <div class="col-md-2">Poeng</div>

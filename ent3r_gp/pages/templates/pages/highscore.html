@@ -1,21 +1,18 @@
 {% extends "base.html" %}
-
+{% block css %}{% load static%} <link rel="stylesheet" href="{% static 'pages/css/style.css' %}">{% endblock %}
 {% block content %}
 <div class="container">
-    <div class="col-md-4 col-xs-8">Din score: {{ms.score}}</div>
-    <div class="row">
-        <div class="col">
-            <div class="panel panel-primary panel-heading">
-                Highscore-liste:
-            </div>
-        </div>
-    </div>
+    <div class="my_score">Din score: {{ms.score}}</div>
+    <h3 class="hiscore">Highscores</h3>
     {% for dict in qs %}
-    <div class="row">
-        <div class="col">
-            {{dict.user__username}}
+    <div class="hi{{forloop.counter}} row">
+        <div class="col-md-1">
+            {{forloop.counter}}
         </div>
-        <div class="col">
+        <div class="col-md-8">
+            {{dict.user__first_name}} {{dict.user__last_name.0}}
+        </div>
+        <div class="col-md-3">
             {{dict.score}}
         </div>
     </div>

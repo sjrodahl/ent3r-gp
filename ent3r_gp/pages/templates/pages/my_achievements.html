@@ -1,10 +1,12 @@
 {% extends "base.html"%}
 
+{% block css %}{% load static%} <link rel="stylesheet" href="{% static 'pages/css/style.css' %}">{% endblock %}
 {% block content %}
 
 
 <div class="container">
-    <div class="row">
+    <h3>Mine prestasjoner</h3>
+    <div class="header-row row">
         <div class="col">
             Navn
         </div> <div class="col">
@@ -15,7 +17,7 @@
         </div>
     </div> 
     {% for a in my_ach %}
-    <div class="row">
+    <div class="body-row row">
         <div class="col">
             {{a.activity.name |lower|capfirst}}
         </div>
