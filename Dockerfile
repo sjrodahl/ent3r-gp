@@ -12,6 +12,8 @@ WORKDIR /opt/services/djangoapp/src
 # Install python requirements
 RUN pip install -r requirements.txt
 
+# Not sure if clearing files are necessary
+RUN cd ent3r_gp && python manage.py collectstatic --clear --noinput
 RUN cd ent3r_gp && python manage.py collectstatic --no-input
 
 EXPOSE 8000
