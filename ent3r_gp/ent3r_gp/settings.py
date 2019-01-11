@@ -25,6 +25,8 @@ STATICFILES_DIRS =[
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '8p2(rwgz&u)04dpwd_x1u#7c&#ac!((0#36@z%4pzba#fxspi_'
+#with open('../ent3r_gp_secret_key.txt') as f:
+#    SECRET_KEY = f.read().split()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -130,3 +132,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 #GO here when redirecting to login:
 LOGIN_URL = 'login'
+
+# as declared in NginX conf, it must match /opt/services/djangoapp/static/
+STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'static')
+
+# do the same for media files, it must match /opt/services/djangoapp/media/
+MEDIA_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'media')
+
+
+

@@ -11,8 +11,8 @@ class Activity(models.Model):
         return str(self.name) +": " + str(self.points)
 
 class Achievement(models.Model):
-    user = models.ForeignKey(User)
-    activity = models.ForeignKey(Activity)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    activity = models.ForeignKey(Activity, on_delete = models.CASCADE)
     date_added = models.DateTimeField(auto_now_add = True)
 
 class Mentor(models.Model):
