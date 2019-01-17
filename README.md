@@ -1,6 +1,6 @@
 # ent3r-gp
 
-## Set up procect using docker-compose
+## Set up project using docker-compose
 
 - Clone the repo and navigate to its root folder.
 - Run the following commands:
