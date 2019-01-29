@@ -32,6 +32,7 @@ def activities(request):
             new_achievement.save()
         return redirect('pages_hiscore')
     else:
+        act = act.order_by('points')
         return render(request, 'pages/activities.html', {'act': act })
 
 @user_passes_test(lambda u: u.is_superuser)
