@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.db.models import Sum
@@ -34,7 +34,7 @@ def activities(request):
     else:
         return render(request, 'pages/activities.html', {'act': act })
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def activity_new(request):
     if request.method=="POST":
         form = NewActivityForm(request.POST)
@@ -66,3 +66,4 @@ def delete_achievements(request):
         return redirect('pages_hiscore')
     else:
         return render(request, 'pages/del_achievements.html', {'my_ach': my_achievements})
+
