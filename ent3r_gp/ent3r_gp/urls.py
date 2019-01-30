@@ -19,6 +19,7 @@ from pages import views as pages_views
 #from account import views as account_views
 
 urlpatterns = [
+    url(r'^$', include('pages.urls')),
     url(r'^account/', include('account.urls')),
     url(r'^pages/', include('pages.urls' )),
     url(r'^admin/', admin.site.urls),
