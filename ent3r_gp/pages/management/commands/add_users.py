@@ -9,7 +9,8 @@ class Command(BaseCommand):
         parser.add_argument('file', nargs = '+', type=str)
 
     def handle(self, *args, **options):
-        pword = "mentor"
+        with open('standard_pass.txt', 'r') as f:
+            pword = f.read().strip()
         filename = options['file'][0]
         with open(filename, 'r') as f:
             user_reader = csv.reader(f, delimiter=',')
