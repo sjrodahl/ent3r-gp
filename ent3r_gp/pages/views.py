@@ -41,7 +41,7 @@ def activity_new(request):
         form = NewActivityForm(request.POST)
         if form.is_valid():
             activity = form.save()
-        return redirect('pages_hiscore')
+        return redirect('pages_activities')
     else:
         form = NewActivityForm()
         return render(request, 'pages/activity_new.html', {'form': form})
