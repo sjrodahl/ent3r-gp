@@ -17,9 +17,15 @@ def index(request):
 
 @login_required
 def hiscore(request):
-    hiscorelist = Achievement.objects.values('user__username', 'user__first_name', 'user__last_name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
+    if request.user.is_superuser:
+        group = 'alle lokasjoner'
+        hiscorelist = Achievement.objects.values('user__username', 'user__first_name', 'user__last_name').annotate(score=Sum('activity__points')).order_by('-score')
+    else:
+        group = request.user.groups.first().name
+        hiscorelist = Achievement.objects.filter(user__groups__name = group).values('user__username', 'user__first_name', 'user__last_name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
+
     my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
-    return render(request, 'pages/highscore.html', {'qs': hiscorelist, 'ms': my_score})
+    return render(request, 'pages/highscore.html', {'qs': hiscorelist, 'ms': my_score, 'group': group})
 
 @login_required
 def activities(request):
