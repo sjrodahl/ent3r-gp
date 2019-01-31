@@ -46,6 +46,19 @@ def activity_new(request):
         form = NewActivityForm()
         return render(request, 'pages/activity_new.html', {'form': form})
 
+@user_passes_test(lambda u: u.is_superuser)
+def delete_activities(request):
+    activities = Activity.objects.all()
+    if request.method==("POST"):
+        checked = request.POST.getlist('delete')
+        for act_id in checked:
+            act_to_delete = Activity.objects.get(id=act_id)
+            act_to_delete.delete()
+        return redirect('pages_activities')
+    else:
+        activities = activities.order_by('points')
+        return render(request, 'pages/del_activities.html', {'act':activities })
+
 @login_required
 def my_achievements(request):
     my_achievements = Achievement.objects.filter(user_id = request.user.id)

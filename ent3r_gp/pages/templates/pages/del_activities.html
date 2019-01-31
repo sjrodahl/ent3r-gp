@@ -1,0 +1,30 @@
+{% extends "base.html"%}
+
+{% block css %}{% load static%} <link rel="stylesheet" href="{% static 'pages/css/style.css' %}">{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h3>Slett aktiviteter</h3>
+    <form action="" method ="POST" class = "post-form">
+        {% csrf_token %}
+        <div class ="header-row row">
+            <div class="col-md-3"></div>
+            <div class="col-md-7">Beskrivelse</div>
+            <div class="col-md-1">Poeng</div>
+        </div>
+        {% for a in act %}
+        <div id= "pt{{a.points}}" class ="row">
+            <div class="form-check"><input class="form-check-input" type="checkbox" value = {{a.id}} name ="delete"></div>
+            <div class="tag col-md-3">#{{a.tag}}</div>
+            <div class="name col-md-7">{{a.name|lower|capfirst}}</div>
+            <div class="points col-md-1">{{a.points}}</div>
+        </div>
+        {% endfor %}
+        <div class="container">
+            <button type="submit" class="btn btn-success">Slett aktiviteter</button> 
+        </div>
+    </form>
+</div>   
+{% endblock %}
+
