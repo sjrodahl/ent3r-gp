@@ -51,6 +51,9 @@
                     <li class="nav-item{% if url_name == 'pages_new_activity' %} active{%endif%}">
                         <a class="nav-link" href="{% url 'pages_new_activity' %}">Lag ny aktivitet</a>
                     </li>
+                    <li class="nav-item{% if url_name == 'pages_del_activities' %} active{%endif%}">
+                        <a class="nav-link" href="{% url 'pages_del_activities' %}">Slett aktiviteter</a>
+                    </li>
                     {%endif%}
                 </ul>
                 {% endwith %}
