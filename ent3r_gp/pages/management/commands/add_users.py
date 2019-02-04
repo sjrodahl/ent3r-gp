@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.management.base import BaseCommand, CommandError
 import csv
 
@@ -16,15 +16,21 @@ class Command(BaseCommand):
             user_reader = csv.reader(f, delimiter=',')
             next(user_reader)   #Skip the header
             for row in user_reader:
-                name, _, _, _, _, mail, _ = row
+                name, mail,_, location = row
                 name = name.split()
                 first_name = name[0]
                 last_name = name[-1]
-                User.objects.create_user(username=mail.lower(),
-                        email = mail.lower(),
+                user = User.objects.create_user(username=mail.lower(),
+                        email=mail.lower(),
                         password=pword,
                         first_name=first_name,
-                        last_name = last_name)
+                        last_name=last_name)
+                group, created = Group.objects.get_or_create(name=location)
+                group.user_set.add(user)
+
+
+
+
 
 
 
