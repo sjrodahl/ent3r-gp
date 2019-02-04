@@ -9,5 +9,6 @@ urlpatterns = [
         url(r'new_activity/', views.activity_new, name = 'pages_new_activity'),
         url(r'my_achievements', views.my_achievements, name = 'pages_my_achievements'),
         url(r'del_achievements', views.delete_achievements, name = 'pages_del_achievements'),
+        url(r'del_activities', views.delete_activities, name = 'pages_del_activities'),
         url(r'^$', views.index, name = 'pages_index'),
         ]
