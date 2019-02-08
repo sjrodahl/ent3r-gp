@@ -7,7 +7,7 @@ from .forms import NewActivityForm
 from .models import Mentor, Activity, Achievement
 from django.contrib.auth import views as auth_views
 
-HIGHSCORE_LIMIT = 15
+HIGHSCORE_LIMIT = 10
 
 def index(request):
     if request.user.is_authenticated:
