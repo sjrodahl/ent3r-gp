@@ -6,13 +6,15 @@
 
 {% bootstrap_messages %}
 
+{% block css %}{% load static%} <link rel="stylesheet" href="{% static 'pages/css/style.css' %}">{% endblock %}
+
 
 {% block content %}
 <div class="container">
 
-    <h1>New activity</h1>
+    <h3>Ny aktivitet</h3>
 
-    <form action="" method="post" class="form">
+    <form action="" method="post" class="post-form">
         {% csrf_token %}
         {% bootstrap_form form layout='inline' %}
         {% buttons %}
