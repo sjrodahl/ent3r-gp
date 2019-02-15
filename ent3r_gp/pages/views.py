@@ -19,13 +19,13 @@ def index(request):
 def hiscore(request):
     if request.user.is_superuser:
         group = 'alle lokasjoner'
-        pair_list = Achievement.objects.values('user__mentor1__name').annotate(score=Sum('activity__points'))
+        pair_list = Achievement.objects.values('user__mentorpair1__name').annotate(score=Sum('activity__points'))
     else:
         group = request.user.groups.first().name
-        pair_list = Achievement.objects.filter(user__groups__name=group).values('user__mentor1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
+        pair_list = Achievement.objects.filter(user__groups__name=group).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
 
     for p in pair_list:
-        pair = MentorPair.objects.filter(name=p['user__mentor1__name']).first()
+        pair = MentorPair.objects.filter(name=p['user__mentorpair1__name']).first()
         if pair:
             p['user1'] = User.objects.values().get(id=pair.mentor_1_id)
             p['user2'] = User.objects.values().get(id=pair.mentor_2_id)

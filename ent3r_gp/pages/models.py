@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 
 class MentorPair(models.Model):
     name = models.CharField(max_length=30)
-    mentor_1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mentor1')
-    mentor_2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mentor2')
+    mentor_1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mentorpair1')
+    mentor_2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mentorpair2')
 
     def __str__(self):
         return(self.name)
