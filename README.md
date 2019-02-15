@@ -16,11 +16,9 @@ docker-compose run djangoapp python3 ent3r_gp/manage.py createsuperuser      # C
 docker-compose run djangoapp python3 ent3r_gp/manage.py add_activities mentor-gp-activities.csv
 # Add the users from the provided csv-file
 docker-compose run djangoapp python3 ent3r_gp/manage.py add_users kontaktinfo_mentorer.csv
-# Add the mentor pairs. Note that the last names need to correspond to the users registered in the app.
-docker-compose run djangoapp python3 ent3r_gp/manage.py add_pairs mentorpar.csv
 
-#Start the application in detached mode
-docker-compose up -d
+
+docker-compose up
 ```
 
 

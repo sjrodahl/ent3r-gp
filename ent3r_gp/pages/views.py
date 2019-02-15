@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.db.models import Sum
 from .forms import NewActivityForm
-from .models import Activity, Achievement, MentorPair
+from .models import Mentor, Activity, Achievement
+from django.contrib.auth import views as auth_views
 
-HIGHSCORE_LIMIT = 5
+HIGHSCORE_LIMIT = 10
 
 def index(request):
     if request.user.is_authenticated:
@@ -17,21 +19,13 @@ def index(request):
 def hiscore(request):
     if request.user.is_superuser:
         group = 'alle lokasjoner'
-        pair_list = Achievement.objects.values('user__mentorpair1__name').annotate(score=Sum('activity__points'))
+        hiscorelist = Achievement.objects.values('user__username', 'user__first_name', 'user__last_name', 'user__groups__name').annotate(score=Sum('activity__points')).order_by('-score')
     else:
         group = request.user.groups.first().name
-        pair_list = Achievement.objects.filter(user__groups__name=group).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
-
-    for p in pair_list:
-        pair = MentorPair.objects.filter(name=p['user__mentorpair1__name']).first()
-        if pair:
-            p['user1'] = User.objects.values().get(id=pair.mentor_1_id)
-            p['user2'] = User.objects.values().get(id=pair.mentor_2_id)
+        hiscorelist = Achievement.objects.filter(user__groups__name = group).values('user__username', 'user__first_name', 'user__last_name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
 
     my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
-    return render(request,
-                  'pages/highscore.html',
-                  {'ps': pair_list, 'ms': my_score, 'group': group})
+    return render(request, 'pages/highscore.html', {'qs': hiscorelist, 'ms': my_score, 'group': group})
 
 @login_required
 def activities(request):
