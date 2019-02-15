@@ -5,4 +5,5 @@ from .models import Activity, Achievement, MentorPair
 
 admin.site.register(MentorPair)
 admin.site.register(Activity)
+admin.site.register(Achievement)
 
