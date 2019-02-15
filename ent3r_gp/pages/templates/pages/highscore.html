@@ -3,16 +3,20 @@
 {% block content %}
 <div class="container">
     <div class="my_score">Din score: {{ms.score}}</div>
-    <h3 class="hiscore">Highscores</h3>
-    {% for dict in qs %}
+    <h3 class="hiscore">Highscores for {{group}} </h3>
+
+    {% for dict in ps %}
     <div class="hi{{forloop.counter}} row">
         <div class="col-md-1">
             {{forloop.counter}}
         </div>
-        <div class="col-md-8">
-            {{dict.user__first_name}} {{dict.user__last_name.0}}
+        <div class="col-md-6">
+            {{dict.user1.first_name}} & {{dict.user2.first_name}}
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
+            {{dict.group|default_if_none:'' }}
+        </div>
+        <div class="col-md-1">
             {{dict.score}}
         </div>
     </div>
