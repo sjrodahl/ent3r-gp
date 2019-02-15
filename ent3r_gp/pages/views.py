@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
-from django.http import HttpResponse
-from django.db.models import Sum, Q
+from django.db.models import Sum
 from .forms import NewActivityForm
-from .models import Mentor, Activity, Achievement, MentorPair
-from django.contrib.auth import views as auth_views
+from .models import Activity, Achievement, MentorPair
 
 HIGHSCORE_LIMIT = 5
 
