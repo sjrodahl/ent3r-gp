@@ -14,7 +14,7 @@
             {{dict.user1.first_name}} & {{dict.user2.first_name}}
         </div>
         <div class="col-md-4">
-            {{dict.user__groups__name|default_if_none:'' }}
+            {{dict.group|default_if_none:'' }}
         </div>
         <div class="col-md-1">
             {{dict.score}}
