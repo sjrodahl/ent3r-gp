@@ -11,6 +11,10 @@ from .models import Activity, Achievement, MentorPair
 HIGHSCORE_LIMIT = 5
 MONTHLY = True
 
+YEAR = datetime.now().year
+MONTH = datetime.now().month
+
+
 MONTHS = {1: 'januar',
           2: 'februar',
           3: 'mars',
@@ -32,8 +36,9 @@ def index(request):
         return redirect('login')
 
 @login_required
-def hiscore(request):
-    month = datetime.now().month
+def hiscore(request, year=YEAR, month=MONTH):
+    print(year)
+    print(month)
     my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
 
     if request.user.is_superuser:
@@ -46,7 +51,7 @@ def hiscore(request):
     else:
         group = request.user.groups.first().name
         if MONTHLY:
-            pair_list = Achievement.objects.filter(user__groups__name=group).filter(date_added__month=month).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
+            pair_list = Achievement.objects.filter(user__groups__name=group).filter(date_added__year=year, date_added__month=month).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
         else:
             pair_list = Achievement.objects.filter(user__groups__name=group).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
 
