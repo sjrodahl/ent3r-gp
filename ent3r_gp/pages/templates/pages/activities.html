@@ -13,10 +13,12 @@
         </div>
         {% for a in act %}
         <div id= "pt{{a.points}}" class ="row">
-            <div class="form-check"><input class="form-check-input" type="checkbox" value = {{a.id}} name ="choices"></div>
+            <input class="form-check-input" type="checkbox" id={{a.id}} value={{a.id}} name ="choices"/>
             <div class="points col-md-1">{{a.points}}</div>
-            <div class="tag col-md-3" >#{{a.tag}}</div>
-            <div class="desc col-md-7">{{a.name|lower|capfirst}}</div>
+            <div class="tag col-md-3">#{{a.tag}}</div>
+            <label class="desc col-md-7 form-check" for={{a.id}}>
+                {{a.name|lower|capfirst}}
+            </label>
         </div>
         {% endfor %}
         <div class="container">

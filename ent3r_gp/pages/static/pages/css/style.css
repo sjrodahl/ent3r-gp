@@ -49,3 +49,10 @@ h3{
 .body-row{
     text-align: center;
 }
+label:hover {
+    font-weight: 700;
+    cursor:pointer;
+}
+input[type=checkbox]:checked + label {
+    font-weight: 700;
+}
