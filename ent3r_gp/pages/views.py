@@ -37,8 +37,8 @@ def index(request):
 
 @login_required
 def hiscore(request, year=YEAR, month=MONTH):
-    print(year)
-    print(month)
+    year = int(year)
+    month = int(month)
     my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
 
     if request.user.is_superuser:
@@ -64,7 +64,7 @@ def hiscore(request, year=YEAR, month=MONTH):
 
     return render(request,
                   'pages/highscore.html',
-                  {'ps': pair_list, 'ms': my_score, 'group': group, 'monthly': (MONTHLY and not request.user.is_superuser), 'month': MONTHS[month]})
+                  {'ps': pair_list, 'ms': my_score,'year':year, 'group': group, 'monthly': (MONTHLY and not request.user.is_superuser), 'month': MONTHS[month]})
 
 @login_required
 def activities(request):
