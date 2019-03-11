@@ -7,8 +7,8 @@ from django.contrib.auth import views as auth_views
 def index(request):
     return render(request, 'account/index.html')
 
-def login(request, **kwargs):
-    if (request.user.is_authenticated):
-        return redirect('pages_hiscore')
-    else:
-        return auth_views.login(request, **kwargs)
+class LoginView(auth_views.LoginView):
+    template_name = 'account/login.html'
+
+class LogoutView(auth_views.LogoutView):
+    template_name = 'account/logout.html'
