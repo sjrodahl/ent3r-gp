@@ -2,10 +2,32 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Sum
+
+from datetime import datetime
+
 from .forms import NewActivityForm
 from .models import Activity, Achievement, MentorPair
 
 HIGHSCORE_LIMIT = 5
+MONTHLY = True
+
+YEAR = datetime.now().year
+MONTH = datetime.now().month
+
+
+MONTHS = {1: 'januar',
+          2: 'februar',
+          3: 'mars',
+          4: 'april',
+          5: 'mai',
+          6: 'juni',
+          7: 'juli',
+          8: 'august',
+          9: 'september',
+          10: 'oktober',
+          11: 'november',
+          12: 'desember'
+          }
 
 def index(request):
     if request.user.is_authenticated:
@@ -14,7 +36,11 @@ def index(request):
         return redirect('login')
 
 @login_required
-def hiscore(request):
+def hiscore(request, year=YEAR, month=MONTH):
+    year = int(year)
+    month = int(month)
+    my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
+
     if request.user.is_superuser:
         group = 'alle lokasjoner'
         pair_list = Achievement.objects.values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')
@@ -24,7 +50,11 @@ def hiscore(request):
                 p['group'] = User.objects.get(id=pair.mentor_1_id).groups.first().name
     else:
         group = request.user.groups.first().name
-        pair_list = Achievement.objects.filter(user__groups__name=group).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
+        if MONTHLY:
+            pair_list = Achievement.objects.filter(user__groups__name=group).filter(date_added__year=year, date_added__month=month).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
+        else:
+            pair_list = Achievement.objects.filter(user__groups__name=group).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
+
 
     for p in pair_list:
         pair = MentorPair.objects.filter(name=p['user__mentorpair1__name']).first()
@@ -32,10 +62,9 @@ def hiscore(request):
             p['user1'] = User.objects.values().get(id=pair.mentor_1_id)
             p['user2'] = User.objects.values().get(id=pair.mentor_2_id)
 
-    my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
     return render(request,
                   'pages/highscore.html',
-                  {'ps': pair_list, 'ms': my_score, 'group': group})
+                  {'ps': pair_list, 'ms': my_score,'year':year, 'group': group, 'monthly': (MONTHLY and not request.user.is_superuser), 'month': MONTHS[month]})
 
 @login_required
 def activities(request):
