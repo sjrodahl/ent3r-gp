@@ -11,8 +11,20 @@ from .models import Activity, Achievement, MentorPair
 HIGHSCORE_LIMIT = 5
 MONTHLY = True
 
+#######################
+# Periods:
+# 1: 16. jan - 15. feb
+# 2: 16. feb - 15. mars
+# etc...
+# .
+# .
+# 12: 16. des - 15. jan
+########################
+
 YEAR = datetime.now().year
-MONTH = datetime.now().month
+PERIOD = datetime.now().month
+if datetime.now().day<=15:
+    PERIOD = PERIOD-1
 
 
 MONTHS = {1: 'januar',
@@ -35,10 +47,20 @@ def index(request):
     else:
         return redirect('login')
 
+def get_start_and_end_date(year, period):
+    start = datetime(year, period, 16)
+    if period == 12:
+        end = datetime(year+1, 1, 15)
+    else:
+        end  = datetime(year, period+1, 15)
+    return (start, end)
+
 @login_required
-def hiscore(request, year=YEAR, month=MONTH):
+def hiscore(request, year=YEAR, period=PERIOD):
     year = int(year)
-    month = int(month)
+    period = int(period)
+    start, end = get_start_and_end_date(year, period)
+
     my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
 
     if request.user.is_superuser:
@@ -51,7 +73,7 @@ def hiscore(request, year=YEAR, month=MONTH):
     else:
         group = request.user.groups.first().name
         if MONTHLY:
-            pair_list = Achievement.objects.filter(user__groups__name=group).filter(date_added__year=year, date_added__month=month).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
+            pair_list = Achievement.objects.filter(user__groups__name=group).filter(date_added__gte=start, date_added__lte=end).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
         else:
             pair_list = Achievement.objects.filter(user__groups__name=group).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
 
@@ -64,7 +86,7 @@ def hiscore(request, year=YEAR, month=MONTH):
 
     return render(request,
                   'pages/highscore.html',
-                  {'ps': pair_list, 'ms': my_score,'year':year, 'group': group, 'monthly': (MONTHLY and not request.user.is_superuser), 'month': MONTHS[month]})
+                  {'ps': pair_list, 'ms': my_score, 'start': start, 'end': end, 'group': group, 'monthly': (MONTHLY and not request.user.is_superuser), 'month': MONTHS[period]})
 
 @login_required
 def activities(request):
