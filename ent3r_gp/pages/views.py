@@ -89,6 +89,25 @@ def hiscore(request, year=YEAR, period=PERIOD):
                   {'ps': pair_list, 'ms': my_score, 'start': start, 'end': end, 'group': group, 'monthly': (MONTHLY and not request.user.is_superuser), 'month': MONTHS[period]})
 
 @login_required
+def hiscore_total(request):
+    my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
+    group = request.user.groups.first().name
+    pair_list = Achievement.objects.filter(user__groups__name=group).values('user__mentorpair1__name').annotate(score=Sum('activity__points')).order_by('-score')[:HIGHSCORE_LIMIT]
+    for p in pair_list:
+        pair = MentorPair.objects.filter(name=p['user__mentorpair1__name']).first()
+        if pair:
+            p['user1'] = User.objects.values().get(id=pair.mentor_1_id)
+            p['user2'] = User.objects.values().get(id=pair.mentor_2_id)
+
+    return render(request,
+                  'pages/highscore.html',
+                  {'ps': pair_list, 'ms': my_score, 'start': None, 'end': None, 'group': group, 'monthly': False, 'month': None})
+
+
+
+
+
+@login_required
 def activities(request):
     act = Activity.objects.all()
     if request.method == "POST":

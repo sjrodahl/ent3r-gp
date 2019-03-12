@@ -7,6 +7,7 @@ urlpatterns = [
         url(r'activities/', views.activities, name ='pages_activities'),
         url(r'hiscore/$', views.hiscore, name = 'pages_hiscore'),
         url(r'hiscore/(?P<year>[0-9]{4})/(?P<period>[0-9]{1,2})/$', views.hiscore),
+        url(r'hiscore/total/$', views.hiscore_total, name='pages_hiscore_total'),
         url(r'new_activity/', views.activity_new, name = 'pages_new_activity'),
         url(r'my_achievements', views.my_achievements, name = 'pages_my_achievements'),
         url(r'del_achievements', views.delete_achievements, name = 'pages_del_achievements'),
