@@ -1,6 +1,10 @@
+import csv
+
 from django.contrib.auth.models import User, Group
 from django.core.management.base import BaseCommand, CommandError
-import csv
+
+from account.models import Mentor
+from pages.models import Location
 
 class Command(BaseCommand):
     help = 'add new user from a csv-file with contact information for the mentors'
@@ -24,8 +28,9 @@ class Command(BaseCommand):
                         password=pword,
                         first_name=first_name,
                         last_name=last_name)
-                group, created = Group.objects.get_or_create(name=location)
-                group.user_set.add(user)
+                loc, created = Location.objects.get_or_create(name=location)
+                mentor = Mentor(user, loc)
+                mentor.save()
 
 
 
