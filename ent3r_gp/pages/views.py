@@ -4,9 +4,12 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 
 from datetime import datetime
+import logging
 
 from .forms import NewActivityForm
 from .models import Activity, Achievement, MentorPair
+
+logger = logging.getLogger('ent3r_gp.' + __name__)
 
 HIGHSCORE_LIMIT = 5
 
@@ -19,11 +22,6 @@ HIGHSCORE_LIMIT = 5
 # .
 # 12: 16. des - 15. jan
 ########################
-
-YEAR = datetime.now().year
-PERIOD = datetime.now().month
-if datetime.now().day<=15:
-    PERIOD = PERIOD-1
 
 
 MONTHS = {1: 'januar',
@@ -59,11 +57,11 @@ def get_start_and_end_date(year=None, period=None):
     if period == 12:
         end = datetime(year+1, 1, 15, 23, 59, 59)
     else:
-        end  = datetime(year, period+1, 15, 23, 59, 59)
+        end = datetime(year, period+1, 15, 23, 59, 59)
     return (start, end)
 
 @login_required
-def hiscore(request, year=YEAR, period=PERIOD):
+def hiscore(request, year=None, period=None):
     start, end =get_start_and_end_date(year, period)
     my_score = Achievement.objects.filter(user_id = request.user.id).aggregate(score =Sum('activity__points'))
 
@@ -147,6 +145,7 @@ def activity_new(request):
     if request.method=="POST":
         form = NewActivityForm(request.POST)
         if form.is_valid():
+            logger.info(request.user.name + ' created a new activity.')
             activity = form.save()
         return redirect('pages_activities')
     else:
@@ -161,6 +160,7 @@ def delete_activities(request):
         for act_id in checked:
             act_to_delete = Activity.objects.get(id=act_id)
             act_to_delete.delete()
+        logger.info(request.user.name + ' deleted activities.')
         return redirect('pages_activities')
     else:
         activities = activities.order_by('points')
