@@ -1,5 +1,5 @@
 # Alpine is a lightweight python image
-FROM python:3.5-alpine
+FROM python:3.7-alpine
 
 # Arbitrary location to store code in the container
 RUN mkdir -p /opt/services/djangoapp/src
