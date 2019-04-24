@@ -61,28 +61,25 @@ def get_start_and_end_date(year=None, period=None):
     return start, end
 
 
-@login_required
-def hiscore(request, year=None, period=None):
-    start, end = get_start_and_end_date(year, period)
-    my_score = Achievement.objects.filter(user_id=request.user.id).aggregate(score=Sum('activity__points'))
+def get_pair_list(user, is_total=False, year=None, period=None):
+    pair_list = Achievement.objects \
+        .values('user__mentorpair1__name') \
+        .annotate(score=Sum('activity__points'))
+    if not is_total:
+        start, end = get_start_and_end_date(year, period)
+        pair_list = pair_list.filter(date_added__gte=start, date_added__lte=end)
 
-    if request.user.is_superuser:
-        group = 'alle lokasjoner'
-        pair_list = Achievement.objects \
-            .values('user__mentorpair1__name') \
-            .annotate(score=Sum('activity__points')) \
-            .order_by('-score')
+    if user.is_superuser:
+        pair_list = pair_list.order_by('-score')
+        # The highscore template needs a 'group' property for each pair.
         for p in pair_list:
             pair = MentorPair.objects.filter(name=p['user__mentorpair1__name']).first()
             if pair:
                 p['group'] = User.objects.get(id=pair.mentor_1_id).groups.first().name
     else:
-        group = request.user.groups.first().name  # Get location, eg. Trondheim
-        pair_list = Achievement.objects \
+        group = user.groups.first().name  # Get location, eg. Trondheim
+        pair_list = pair_list \
             .filter(user__groups__name=group) \
-            .filter(date_added__gte=start, date_added__lte=end) \
-            .values('user__mentorpair1__name') \
-            .annotate(score=Sum('activity__points')) \
             .order_by('-score')[:HIGHSCORE_LIMIT]
 
     # Get mentor info for each pair
@@ -91,39 +88,32 @@ def hiscore(request, year=None, period=None):
         if pair:
             p['user1'] = User.objects.values().get(id=pair.mentor_1_id)
             p['user2'] = User.objects.values().get(id=pair.mentor_2_id)
+    return pair_list
 
-    return render(request, 'pages/highscore.html',
-        {
+
+@login_required
+def hiscore(request, year=None, period=None):
+    group = 'alle lokasjoner' if request.user.is_superuser else request.user.groups.first().name
+    start, end = get_start_and_end_date(year, period)
+    my_score = Achievement.objects.filter(user_id=request.user.id).aggregate(score=Sum('activity__points'))
+    pair_list = get_pair_list(request.user, is_total=False, year=year, period=period)
+    return render(request, 'pages/highscore.html', {
             'ps': pair_list,
             'ms': my_score,
             'start': start,
             'end': end,
             'group': group,
             'monthly': True,
-            'month': MONTHS[period],
+            'month': MONTHS[end.month],
         })
 
 
 @login_required
 def hiscore_total(request):
+    group = 'alle lokasjoner' if request.user.is_superuser else request.user.groups.first().name
     my_score = Achievement.objects.filter(user_id=request.user.id).aggregate(score=Sum('activity__points'))
-    if request.user.is_superuser:
-        group = 'alle lokasjoner'
-    else:
-        group = request.user.groups.first().name
-    pair_list = Achievement.objects \
-        .filter(user__groups__name=group) \
-        .values('user__mentorpair1__name') \
-        .annotate(score=Sum('activity__points')) \
-        .order_by('-score')[:HIGHSCORE_LIMIT]
-    for p in pair_list:
-        pair = MentorPair.objects.filter(name=p['user__mentorpair1__name']).first()
-        if pair:
-            p['user1'] = User.objects.values().get(id=pair.mentor_1_id)
-            p['user2'] = User.objects.values().get(id=pair.mentor_2_id)
-
-    return render(request, 'pages/highscore.html',
-        {
+    pair_list = get_pair_list(request.user, is_total=True)
+    return render(request, 'pages/highscore.html', {
             'ps': pair_list,
             'ms': my_score,
             'group': group,
@@ -160,7 +150,7 @@ def activity_new(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def delete_activities(request):
-    activities = Activity.objects.all()
+    acts = Activity.objects.all()
     if request.method == "POST":
         checked = request.POST.getlist('delete')
         for act_id in checked:
@@ -168,8 +158,8 @@ def delete_activities(request):
             act_to_delete.delete()
         return redirect('pages_activities')
     else:
-        activities = activities.order_by('points')
-        return render(request, 'pages/del_activities.html', {'act': activities})
+        acts = acts.order_by('points')
+        return render(request, 'pages/del_activities.html', {'act': acts})
 
 
 @login_required
