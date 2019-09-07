@@ -15,7 +15,7 @@ class Command(BaseCommand):
             user_reader = csv.reader(f, delimiter=',')
             next(user_reader)   #Skip the header
             for row in user_reader:
-                name, mail,_, location = row
+                name, location, _, _, _, mail,_ = row
                 name = name.split()
                 first_name = name[0]
                 last_name = name[-1]

@@ -15,15 +15,19 @@ class Command(BaseCommand):
             user_reader = csv.reader(f, delimiter=',')
             next(user_reader)   #Skip the header
             for row in user_reader:
-                groupname, mentor_1, mentor_2, room, campus, comment = row
+                groupname, mentor_1, mentor_2, room, comment = row
                 mentor_1_last_name = mentor_1.split()[-1]
+                mentor_1_first_name = mentor_1.split()[0]
                 mentor_2_last_name = mentor_2.split()[-1]
+                mentor_2_first_name = mentor_2.split()[0]
                 try:
-                    user_1 = User.objects.get(last_name=mentor_1_last_name)
-                    user_2 = User.objects.get(last_name=mentor_2_last_name)
+                    user_1 = User.objects.get(first_name=mentor_1_first_name,
+                            last_name=mentor_1_last_name)
+                    user_2 = User.objects.get(first_name=mentor_2_first_name,
+                            last_name=mentor_2_last_name)
                 except User.DoesNotExist:
-                    print(mentor_1_last_name )
-                    print(mentor_2_last_name )
+                    print(mentor_1_first_name + '' +  mentor_1_last_name )
+                    print(mentor_2_first_name + '' +  mentor_2_last_name )
 
                 MentorPair.objects.create(name=groupname, mentor_1=user_1, mentor_2=user_2)
                 # Create the mirrored pair as well
