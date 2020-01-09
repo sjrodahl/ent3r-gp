@@ -37,12 +37,13 @@ def index(request):
 
 #######################
 # Periods:
+# 0: 16. des- 15. jan
 # 1: 16. jan - 15. feb
 # 2: 16. feb - 15. mars
 # etc...
 # .
 # .
-# 12: 16. des - 15. jan
+# 11: 16. nov - 15. des
 ########################
 def get_start_and_end_date(year=None, period=None):
     if year is None:
@@ -51,13 +52,17 @@ def get_start_and_end_date(year=None, period=None):
         period = datetime.now().month
         if datetime.now().day <= 15:
             period -= 1
-    year = int(year)
-    period = int(period)
-    start = datetime(year, period, 16)
-    if period == 12:
-        end = datetime(year+1, 1, 15, 23, 59, 59)
+    if period == 0:
+        start = datetime(year-1, 12, 16)
+        end = datetime(year, 1, 15)
     else:
-        end = datetime(year, period+1, 15, 23, 59, 59)
+        year = int(year)
+        period = int(period)
+        start = datetime(year, period, 16)
+        if period == 12:
+            end = datetime(year+1, 1, 15, 23, 59, 59)
+        else:
+            end = datetime(year, period+1, 15, 23, 59, 59)
     return start, end
 
 
