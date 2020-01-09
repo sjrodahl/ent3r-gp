@@ -4,12 +4,15 @@
 
 - Clone the repo and navigate to its root folder.
 - Run the following commands:
-
+- If you are relaunching an existing database, notice the  [--fake-initial](https://docs.djangoproject.com/en/1.11/topics/migrations/#initial-migrations) flag.
 ```
 docker-compose build
 
-docker-compose run djangoapp python3 ent3r_gp/manage.py makemigrations pages # Initiate the database tables
+docker-compose run djangoapp python3 ent3r_gp/manage.py makemigrations # Initiate the database tables
+# If you are starting from scratch, use:
 docker-compose run djangoapp python3 ent3r_gp/manage.py migrate              # Apply the changes to the database
+# If you are relaunching an existing database, use the --fake-initial flag:
+docker-compose run djangoapp python3 ent3r_gp/manage.py migrate --fake-initial
 docker-compose run djangoapp python3 ent3r_gp/manage.py createsuperuser      # Create root user. Follow prompts to set username and password
 
 # Add the activities from the provided csv-file
